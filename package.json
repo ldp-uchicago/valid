@@ -1,0 +1,20 @@
+{
+  "name": "ldp-valid",
+  "version": "0.0.0",
+  "description": "validation schema and tests for LDP transcript columns",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "ldp",
+    "schema",
+    "validation"
+  ],
+  "author": "RCC",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "tape": "~3.0.0",
+    "valid-records": "0.0.5"
+  }
+}
