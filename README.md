@@ -1,6 +1,6 @@
 # ldp-valid
 
-LDP validation [schema](schema.js) and [tests](test.js).
+LDP transcript validation [schema](schema.js) and [tests](test.js).
 
 Run `npm install` to install dependencies before running tests.
 
