@@ -1,6 +1,8 @@
 'use strict';
 
+
 // helper function to format reply for invalid values
+//
 var invalidReply = function (col, val, reason) {
 
     var value = '`' + val + '`';
@@ -13,7 +15,9 @@ var invalidReply = function (col, val, reason) {
 // see http://joyrexus.spc.uchicago.edu/ldp/docs/specs/transcript/columns.html
 
 
-// column used to code which hands were used to perform a gesture
+// validation for `lrb` column
+//   used to code which hands were used to perform a gesture
+//
 var lrb = function (v) {
 
     var column = 'LRB';
@@ -25,7 +29,8 @@ var lrb = function (v) {
 };
 
 
-// time stamp colum
+// validation for `time` column (time stamp)
+//
 var time = function (v) {
 
     var column = 'Time';
@@ -33,7 +38,7 @@ var time = function (v) {
     // has a value
     if (v) {
 
-        // in the general format
+        // is in the general format
         if (/^\d\d:\d\d:\d\d$/.test(v)) {
 
             if (/^2[4-9]:/.test(v)) {
