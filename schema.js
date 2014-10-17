@@ -30,67 +30,47 @@ var time = function (v) {
 
     var column = 'Time';
 
+    // has a value
     if (v) {
 
+        // in the general format
         if (/^\d\d:\d\d:\d\d$/.test(v)) {
 
             if (/^2[4-9]:/.test(v)) {
-                return invalidReply(column, v, 'Out of range for hours');
+                return invalidReply(column, v, 'out of range for hours');
             }
 
             if (/^\d\d:[6-9]/.test(v)) {
-                return invalidReply(column, v, 'Out of range for minutes');
-            }
-
-
-        } else {
-
-            if (/\s/.test(v)) {
-                return invalidReply(column, v, 'Entry cannot contain space');
-            }
-
-            if (/[^:\d]/.test(v)) {
-                var reason = 'No letters or symbols other than colon';
-                return invalidReply(column, v, reason);
-            }
-
-            if (/:{2}/g.test(v)) {
-                return invalidReply(column, v, 'Missing at least one colon');
-            }
-
-            if (/^[0-9][0-9][0-9][0-9]:[0-9][0-9]$/.test(v)) {
-                return invalidReply(column, v, 'Missing a colon between hours and minutes');
-            }
-
-            if (/^[0-9][0-9]:[0-9][0-9][0-9][0-9]$/.test(v)) {
-                return invalidReply(column, v, 'Missing a colon between minutes and seconds');
-            }
-
-            if (!/:/.test(v)) {
-                return invalidReply(column, v, 'Missing both colons');
-            }
-
-            if (/:\d$/.test(v)) {
-                return invalidReply(column, v, 'Need two digits for seconds');
+                return invalidReply(column, v, 'out of range for minutes');
             }
 
             if (!/:[0-5]\d$/.test(v)) {
-                return invalidReply(column, v, 'Out of range for seconds');
+                return invalidReply(column, v, 'out of range for seconds');
+            }
+
+        // is improperly formatted
+        } else {
+
+            if (/\s/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain space');
             }
 
             if (/^\d:/.test(v)) {
-                return invalidReply(column, v, 'Need two digits for hours');
+                return invalidReply(column, v, 'need two digits for hours');
             }
 
             if (/^\d\d:\d:/.test(v)) {
-                return invalidReply(column, v, 'Need two digits for minutes');
+                return invalidReply(column, v, 'need two digits for minutes');
             }
 
-            return invalidReply(column, v, 'improper value');
+            if (/:\d$/.test(v)) {
+                return invalidReply(column, v, 'need two digits for seconds');
+            }
+
+            return invalidReply(column, v, 'required format is HH:MM:SS');
         }
 
     }
-
 };
 
 

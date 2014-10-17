@@ -45,22 +45,39 @@ test('schema', function (t) {
         t.equal(check.Time('23:59:59'), undefined);
         t.equal(
             check.Time('00:00:00 '),
-            'Time = `00:00:00 ` Entry cannot contain space'
+            'Time = `00:00:00 ` entry cannot contain space',
+            "check end for spaces"
         );
         t.equal(
             check.Time(' 00:00:00'),
-            'Time = ` 00:00:00` Entry cannot contain space'
+            'Time = ` 00:00:00` entry cannot contain space',
+            "check beginning for spaces"
         );
-        t.equal(check.Time('24:00:00'), undefined, "check max for hours");
+        t.equal(
+            check.Time('24:00:00'),
+            'Time = `24:00:00` out of range for hours',
+            "check hour range"
+        );
+        t.equal(
+            check.Time('00:60:00'),
+            'Time = `00:60:00` out of range for minutes',
+            "check minute range"
+        );
+        t.equal(
+            check.Time('00:00:60'),
+            'Time = `00:00:60` out of range for seconds',
+            "check seconds range"
+        );
+        t.equal(
+            check.Time('0'),
+            'Time = `0` required format is HH:MM:SS',
+            "ensure required format"
+        );
         /*
-        t.equal(check.Time('00:60:00'), undefined, "check max for minutes");
-        t.equal(check.Time('00:00:60'), undefined, "check max for seconds");
         t.equal(check.Time('00:00'), undefined, "check for hours, minutes, and seconds");
-        t.equal(check.Time('0'), undefined, "check for hours, minutes, and seconds");
         t.equal(check.Time('1:01:01'), undefined, "permit only double digit for hours");
         t.equal(check.Time('01:1:01'), undefined, "permit only double digit for minutes");
         t.equal(check.Time('01:01:1'), undefined, "permit only double digit for seconds");
-        t.equal(check.Time(' 01:01:01'), undefined, "do not permit whitespace");
         */
         t.end();
     });
