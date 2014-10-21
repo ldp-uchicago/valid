@@ -100,15 +100,14 @@ test('schema', function (t) {
     t.end();
 });
 
-
 test('validate', function (t) {
 
     var records = [
-            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x"},
-            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y"},
-            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z"},
-            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q"},
-            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b"}
+            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00"},
+            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00"},
+            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z", "Time": " 30:00:00"},
+            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59"},
+            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00"}
         ],
         Validator = require('valid-records'),
         valid = new Validator(check),
