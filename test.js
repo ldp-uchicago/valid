@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape'),
-    check = require('schema');
+    check = require('./schema');
 
 
 test('schema', function (t) {
@@ -73,12 +73,27 @@ test('schema', function (t) {
             'Time = `0` required format is HH:MM:SS',
             "ensure required format"
         );
-        /*
-        t.equal(check.Time('00:00'), undefined, "check for hours, minutes, and seconds");
-        t.equal(check.Time('1:01:01'), undefined, "permit only double digit for hours");
-        t.equal(check.Time('01:1:01'), undefined, "permit only double digit for minutes");
-        t.equal(check.Time('01:01:1'), undefined, "permit only double digit for seconds");
-        */
+        t.equal(
+            check.Time('00:00'),
+            'Time = `00:00` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('1:01:01'),
+            'Time = `1:01:01` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('01:1:01'),
+            'Time = `01:1:01` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('01:01:1'),
+            'Time = `01:01:1` required format is HH:MM:SS',
+            "ensure required format"
+        );
+
         t.end();
     });
 
