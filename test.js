@@ -1,7 +1,7 @@
 'use strict';
 
 var test = require('tape'),
-    check = require('schema');
+    check = require('./schema');
 
 
 test('schema', function (t) {
@@ -73,27 +73,41 @@ test('schema', function (t) {
             'Time = `0` required format is HH:MM:SS',
             "ensure required format"
         );
-        /*
-        t.equal(check.Time('00:00'), undefined, "check for hours, minutes, and seconds");
-        t.equal(check.Time('1:01:01'), undefined, "permit only double digit for hours");
-        t.equal(check.Time('01:1:01'), undefined, "permit only double digit for minutes");
-        t.equal(check.Time('01:01:1'), undefined, "permit only double digit for seconds");
-        */
+        t.equal(
+            check.Time('00:00'),
+            'Time = `00:00` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('1:01:01'),
+            'Time = `1:01:01` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('01:1:01'),
+            'Time = `01:1:01` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.Time('01:01:1'),
+            'Time = `01:01:1` required format is HH:MM:SS',
+            "ensure required format"
+        );
+
         t.end();
     });
 
     t.end();
 });
 
-
 test('validate', function (t) {
 
     var records = [
-            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x"},
-            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y"},
-            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z"},
-            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q"},
-            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b"}
+            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00"},
+            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00"},
+            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z", "Time": " 30:00:00"},
+            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59"},
+            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00"}
         ],
         Validator = require('valid-records'),
         valid = new Validator(check),
