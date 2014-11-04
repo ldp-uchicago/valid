@@ -34,10 +34,8 @@ var lrb = function (v) {
 var time = function (v) {
 
     var column = 'Time';
-
     // has a value
     if (v) {
-
         // is in the general format
         if (/^\d\d:\d\d:\d\d$/.test(v)) {
 
@@ -52,8 +50,6 @@ var time = function (v) {
             if (!/:[0-5]\d$/.test(v)) {
                 return invalidReply(column, v, 'out of range for seconds');
             }
-
-        // is improperly formatted
         } else {
 
             if (/\s/.test(v)) {
@@ -74,15 +70,100 @@ var time = function (v) {
 
             return invalidReply(column, v, 'required format is HH:MM:SS');
         }
-
     }
 };
 
+var gtype = function (v) {
+// (?:(\/|;)(C|DP|DP.nl|DS|DSDP|E|FA|G|S|R.a|R.d|R.m|R.a.pp|R.d.pp|R.m.pp|R.a.e|R.d.e|R.m.e|R.met))*$/
+    var column = 'Gtype';
+    if (v) {
+        if (!/^(C|DP|DP\.nl|DS|DSDP|E|FA|G|S|R\.a|R\.d|R\.m|R\.a\.pp|R\.d\.pp|R\.m\.pp|R\.a\.e|R\.d\.e|R\.m\.e|R\.met)((\/|;)(C|DP|DP\.nl|DS|DSDP|E|FA|G|S|R\.a|R\.d|R\.m|R\.a\.pp|R\.d\.pp|R\.m\.pp|R\.a\.e|R\.d\.e|R\.m\.e|R\.met))*$/.test(v)) {
+            if (/\s/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain space');
+            }
+            if (/^;/.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with ;');
+            }
+            if (/^\//.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with /');
+            }
+            if (/^\./.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with .');
+            }
+            if (/;$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with ;');
+            }
+            if (/\/$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with /');
+            }
+            if (/\.$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with .');
+            }
+            if (/[0-9]/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain numeric characters');
+            }
+            if (/(\/\/)/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain //');
+            }
+            if (/;;/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain ;;');
+            }
+            if (/(\.\.)/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain ..');
+            }
+            return invalidReply(column, v, 'is an invalid entry');
+        }
+    }
+};
+
+var gsrel = function (v) {
+
+    var column = 'GSRel';
+    if (v) {
+        if (!/^(DA|MS|UC|X|ADD|ADD.err|ADD.err.s|ADD.f|ADD.met|ADD.nr|ADD.ns|ADD.q|ADD.s|E|E.b|RF|RF.a|RF.p)((\/|;)(DA|MS|UC|X|ADD|ADD.err|ADD.err.s|ADD.f|ADD.met|ADD.nr|ADD.ns|ADD.q|ADD.s|E|E.b|RF|RF.a|RF.p))*$/.test(v)) {
+            if (/\s/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain space');
+            }
+            if (/^;/.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with ;');
+            }
+            if (/^\//.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with /');
+            }
+            if (/^\./.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with .');
+            }
+            if (/;$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with ;');
+            }
+            if (/\/$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with /');
+            }
+            if (/\.$/.test(v)) {
+                return invalidReply(column, v, 'entry cannot end with .');
+            }
+            if (/[0-9]/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain numeric characters');
+            }
+            if (/(\/\/)/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain //');
+            }
+            if (/;;/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain ;;');
+            }
+            if (/(\.\.)/.test(v)) {
+                return invalidReply(column, v, 'entry cannot contain ..');
+            }
+            return invalidReply(column, v, 'is an invalid entry');
+        }
+    }
+};
 
 module.exports = {
 
     LRB: lrb,
-
-    Time: time
+    Time: time,
+    Gtype: gtype,
+    GSRel: gsrel
 
 };
