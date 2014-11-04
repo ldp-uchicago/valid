@@ -80,20 +80,172 @@ test('schema', function (t) {
         );
         t.equal(
             check.Time('1:01:01'),
-            'Time = `1:01:01` required format is HH:MM:SS',
+            'Time = `1:01:01` need two digits for hours',
             "ensure required format"
         );
         t.equal(
             check.Time('01:1:01'),
-            'Time = `01:1:01` required format is HH:MM:SS',
+            'Time = `01:1:01` need two digits for minutes',
             "ensure required format"
         );
         t.equal(
             check.Time('01:01:1'),
-            'Time = `01:01:1` required format is HH:MM:SS',
+            'Time = `01:01:1` need two digits for seconds',
             "ensure required format"
         );
 
+        t.end();
+    });
+    
+    test('G-type column constraints', function (t) {
+        t.equal(check.Gtype(''), undefined, "permit empty strings");
+        t.equal(check.Gtype('C'), undefined);
+        t.equal(check.Gtype('DP'), undefined);
+        t.equal(check.Gtype('C/DP'), undefined);
+        t.equal(check.Gtype('C;DP'), undefined);
+        t.equal(check.Gtype('C/DP;G/S/DSDP'), undefined);
+        t.equal(check.Gtype('R.m.pp'), undefined);
+        t.equal(
+            check.Gtype('Z'),
+            'Gtype = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('A'),
+            'Gtype = `A` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('C/GG'),
+            'Gtype = `C/GG` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('C/DP '),
+            'Gtype = `C/DP ` entry cannot contain space',
+            "check for spaces"
+        );
+        t.equal(
+            check.Gtype(';C/DP'),
+            'Gtype = `;C/DP` entry cannot begin with ;',
+            "check beginning for ;"
+        );
+        t.equal(
+            check.Gtype('/C/DP'),
+            'Gtype = `/C/DP` entry cannot begin with /',
+            "check beginning for /"
+        );
+        t.equal(
+            check.Gtype('.C/DP'),
+            'Gtype = `.C/DP` entry cannot begin with .',
+            "check beginning for ."
+        );
+        t.equal(
+            check.Gtype('C/DP.'),
+            'Gtype = `C/DP.` entry cannot end with .',
+            "check end for ."
+        );
+        t.equal(
+            check.Gtype('C/DP/'),
+            'Gtype = `C/DP/` entry cannot end with /',
+            "check end for /"
+        );
+        t.equal(
+            check.Gtype('C/43/DP'),
+            'Gtype = `C/43/DP` entry cannot contain numeric characters',
+            "check for numbers"
+        );
+        t.equal(
+            check.Gtype('C//DP'),
+            'Gtype = `C//DP` entry cannot contain //',
+            "check for //"
+        );
+        t.equal(
+            check.Gtype('C;;DP'),
+            'Gtype = `C;;DP` entry cannot contain ;;',
+            "check for ;;"
+        );
+        t.equal(
+            check.Gtype('R.m..pp'),
+            'Gtype = `R.m..pp` entry cannot contain ..',
+            "check for spaces"
+        );
+        t.end();
+    });
+
+    test('GS_Rel column constraints', function (t) {
+        t.equal(check.GSRel(''), undefined, "permit empty strings");
+        t.equal(check.GSRel('ADD'), undefined);
+        t.equal(check.GSRel('ADD.err'), undefined);
+        t.equal(check.GSRel('ADD.err.s'), undefined);
+        t.equal(check.GSRel('DA/MS'), undefined);
+        t.equal(check.GSRel('X;E'), undefined);
+        t.equal(check.GSRel('ADD/ADD.met;E.b;RF.a/MS'), undefined);
+        t.equal(
+            check.GSRel('Z'),
+            'GSRel = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('ADDD'),
+            'GSRel = `ADDD` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('C/XX'),
+            'GSRel = `C/XX` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('X;E '),
+            'GSRel = `X;E ` entry cannot contain space',
+            "check for spaces"
+        );
+        t.equal(
+            check.GSRel(';X;E'),
+            'GSRel = `;X;E` entry cannot begin with ;',
+            "check beginning for ;"
+        );
+        t.equal(
+            check.GSRel('/X;E'),
+            'GSRel = `/X;E` entry cannot begin with /',
+            "check beginning for /"
+        );
+        t.equal(
+            check.GSRel('.X;E'),
+            'GSRel = `.X;E` entry cannot begin with .',
+            "check beginning for ."
+        );
+        t.equal(
+            check.GSRel('X;E.'),
+            'GSRel = `X;E.` entry cannot end with .',
+            "check end for ."
+        );
+        t.equal(
+            check.GSRel('X;E/'),
+            'GSRel = `X;E/` entry cannot end with /',
+            "check end for /"
+        );
+        t.equal(
+            check.GSRel('X/43/E'),
+            'GSRel = `X/43/E` entry cannot contain numeric characters',
+            "check for numbers"
+        );
+        t.equal(
+            check.GSRel('X//E'),
+            'GSRel = `X//E` entry cannot contain //',
+            "check for //"
+        );
+        t.equal(
+            check.GSRel('X;;E'),
+            'GSRel = `X;;E` entry cannot contain ;;',
+            "check for ;;"
+        );
+        t.equal(
+            check.GSRel('ADD..err'),
+            'GSRel = `ADD..err` entry cannot contain ..',
+            "check for spaces"
+        );
         t.end();
     });
 
@@ -103,17 +255,17 @@ test('schema', function (t) {
 test('validate', function (t) {
 
     var records = [
-            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00"},
-            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00"},
-            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z", "Time": " 30:00:00"},
-            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59"},
-            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00"}
+            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD"},
+            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD"},
+            {"_ID": "22", "ROW": "3", "LRB": "L+", "XYZ": "z", "Time": " 30:00:00", "Gtype": "C", "GSRel": "ADD "},
+            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59", "Gtype": "C", "GSRel": "ADDD"},
+            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00", "Gtype": "C", "GSRel": "ADD"}
         ],
         Validator = require('valid-records'),
         valid = new Validator(check),
         results = valid.validate(records);
 
     t.plan(2);
-    t.equal(results.report.invalid, 2);
-    t.equal(Object.keys(results.report.errors).length, 2, "2 lines have errors");
+    t.equal(results.report.invalid, 6);
+    t.equal(Object.keys(results.report.errors).length, 3, "3 lines have errors");
 });
