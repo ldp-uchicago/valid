@@ -168,7 +168,7 @@ test('schema', function (t) {
         t.equal(
             check.Gtype('R.m..pp'),
             'Gtype = `R.m..pp` entry cannot contain ..',
-            "check for spaces"
+            "check for .."
         );
         t.end();
     });
@@ -244,22 +244,105 @@ test('schema', function (t) {
         t.equal(
             check.GSRel('ADD..err'),
             'GSRel = `ADD..err` entry cannot contain ..',
-            "check for spaces"
+            "check for .."
         );
         t.end();
     });
 
+    test('Key column constraints', function (t) {
+        t.equal(check.Key(''), undefined, "permit empty strings");
+        t.equal(check.Key('xcx'), undefined);
+        t.equal(check.Key('M12F2'), undefined);
+        t.equal(check.Key('123456789'), undefined);
+        t.equal(
+            check.Key('1 '),
+            'Key = `1 ` entry cannot contain space',
+            "check for space"
+        );
+        t.equal(
+            check.Key('0'),
+            'Key = `0` entry cannot contain 0',
+            "check for 0"
+        );
+        t.equal(
+            check.Key('Z'),
+            'Key = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Key('P'),
+            'Key = `P` is an invalid entry',
+            "check for valid characters"
+        );
+        t.end();
+    });
+
+    test('Utts column constraints', function (t) {
+        t.equal(check.Utts(''), undefined, "permit empty strings");
+        t.equal(check.Utts('a'), undefined);
+        t.equal(check.Utts('hello'), undefined);
+        t.equal(check.Utts('---'), undefined);
+        t.equal(check.Utts('###'), undefined);
+        t.equal(check.Utts('hello world'), undefined);
+        t.equal(
+            check.Utts(' hello'),
+            'Utts = ` hello` entry cannot begin with space',
+            "check beginning for space"
+        );
+        t.equal(
+            check.Utts('hello '),
+            'Utts = `hello ` entry cannot end with space',
+            "check end for space"
+        );
+        t.equal(
+            check.Utts('heLlo'),
+            'Utts = `heLlo` entry cannot contain capital letter',
+            "check for capital letter"
+        );
+        t.equal(
+            check.Utts('-'),
+            'Utts = `-` entry cannot contain - or --',
+            "check for - and --"
+        );
+        t.equal(
+            check.Utts('#'),
+            'Utts = `#` entry cannot contain # or ##',
+            "check for # and ##"
+        );
+        t.equal(
+            check.Utts('--'),
+            'Utts = `--` entry cannot contain - or --',
+            "check for - and --"
+        );
+        t.equal(
+            check.Utts('##'),
+            'Utts = `##` entry cannot contain # or ##',
+            "check for # and ##"
+        );
+        t.equal(
+            check.Utts('----'),
+            'Utts = `----` entry can only contain ---',
+            "check for ----"
+        );
+        t.equal(
+            check.Utts('####'),
+            'Utts = `####` entry can only contain ###',
+            "check for ####"
+        );
+        t.end();
+    });
+    
     t.end();
 });
 
 test('validate', function (t) {
 
     var records = [
-            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD"},
-            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD"},
-            {"_ID": "22", "ROW": "3", "LRB": "L+", "XYZ": "z", "Time": " 30:00:00", "Gtype": "C", "GSRel": "ADD "},
-            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59", "Gtype": "C", "GSRel": "ADDD"},
-            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00", "Gtype": "C", "GSRel": "ADD"}
+            {"_ID": "22", "ROW": "1", "LRB": "L", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "2", "LRB": "L+L", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "3", "LRB": "L+", "Time": " 30:00:00", "Gtype": "C", "GSRel": "ADD ", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "Time": "23:59:59", "Gtype": "C", "GSRel": "ADDD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "Time": "00:0:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"}
         ],
         Validator = require('valid-records'),
         valid = new Validator(check),
