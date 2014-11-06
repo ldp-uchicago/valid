@@ -206,7 +206,7 @@ var utts = function (v) {
 
     var column = 'Utts';
     if (v) {
-        if (/^[-#a-z\s][-#a-z\s]*$/.test(v)) {
+        if (/^[-#@a-z\s][-#@a-z\s]*$/.test(v)) {
         
             if (/^\s/.test(v)) {
                 return invalidReply(column, v, 'entry cannot begin with space');
@@ -232,8 +232,45 @@ var utts = function (v) {
                     if (/####/.test(v)) {
                         return invalidReply(column, v, 'entry can only contain ###');
                     }
+                    
                 } else {
                     return invalidReply(column, v, 'entry cannot contain # or ##');
+                }
+            }
+            
+            if (/@/.test(v)) {
+                if (!/@f/.test(v) && !/@l/.test(v)) {
+                    return invalidReply(column, v, "entry can only have @f or @l");
+                }
+                
+                if (/@f/.test(v)) {
+                    if (/\s/.test(v)) {
+                        if (!/@f\s/.test(v) && !/@f$/.test(v)) {
+                            return invalidReply(column, v, '@f must be at end of word');
+                        }
+                    } else {
+                        if (!/@f$/.test(v)) {
+                            return invalidReply(column, v, '@f must be at end of word');
+                        }
+                    }
+                }
+                
+                if (/@l/.test(v)) {
+                    if (/\s/.test(v)) {
+                        if (!/@l\s/.test(v) && !/@l$/.test(v)) {
+                            return invalidReply(column, v, '@l must be at end of word');
+                        }
+                        if (!/\s@l/.test(v) && !/^@l/.test(v)) {
+                            return invalidReply(column, v, '@l must be at beginning of word');
+                        }
+                    } else {
+                        if (!/@l$/.test(v)) {
+                            return invalidReply(column, v, '@l must be at end of word');
+                        }
+                        if (!/^@l/.test(v)) {
+                            return invalidReply(column, v, '@l must be at beginning of word');
+                        }
+                    }
                 }
             }
             
@@ -241,7 +278,9 @@ var utts = function (v) {
             if (/[A-Z]/.test(v)) {
                 return invalidReply(column, v, 'entry cannot contain capital letter');
             }
-            
+            if (/^\s/.test(v)) {
+                return invalidReply(column, v, 'entry cannot begin with space');
+            }
             return invalidReply(column, v, 'is an invalid entry');
         }
     }
