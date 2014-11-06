@@ -284,6 +284,52 @@ test('schema', function (t) {
         t.equal(check.Utts('---'), undefined);
         t.equal(check.Utts('###'), undefined);
         t.equal(check.Utts('hello world'), undefined);
+        t.equal(check.Utts('pollo@f'), undefined);
+        t.equal(check.Utts('pollo@f fried'), undefined);
+        t.equal(check.Utts('pollo@f frito@f'), undefined);
+        t.equal(check.Utts('@lpollo@l'), undefined);
+        t.equal(check.Utts('@lpollo@l fried'), undefined);
+        t.equal(check.Utts('@lpollo@l @lfried@l'), undefined);
+        t.equal(
+            check.Utts('@fpollo'),
+            'Utts = `@fpollo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('fried @fpollo'),
+            'Utts = `fried @fpollo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('po@fllo'),
+            'Utts = `po@fllo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('pollo@l'),
+            'Utts = `pollo@l` @l must be at beginning of word',
+            "check beginning for @l"
+        );
+        t.equal(
+            check.Utts('pollo@l fried'),
+            'Utts = `pollo@l fried` @l must be at beginning of word',
+            "check beginning for @l"
+        );
+        t.equal(
+            check.Utts('@lpollo'),
+            'Utts = `@lpollo` @l must be at end of word',
+            "check end for @l"
+        );
+        t.equal(
+            check.Utts('pol@lo'),
+            'Utts = `pol@lo` @l must be at end of word',
+            "check beginning and end for @l"
+        );
+        t.equal(
+            check.Utts('p@ollo'),
+            'Utts = `p@ollo` entry can only have @f or @l',
+            "check beginning and end for @l"
+        );
         t.equal(
             check.Utts(' hello'),
             'Utts = ` hello` entry cannot begin with space',
