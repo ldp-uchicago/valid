@@ -80,40 +80,321 @@ test('schema', function (t) {
         );
         t.equal(
             check.Time('1:01:01'),
-            'Time = `1:01:01` required format is HH:MM:SS',
+            'Time = `1:01:01` need two digits for hours',
             "ensure required format"
         );
         t.equal(
             check.Time('01:1:01'),
-            'Time = `01:1:01` required format is HH:MM:SS',
+            'Time = `01:1:01` need two digits for minutes',
             "ensure required format"
         );
         t.equal(
             check.Time('01:01:1'),
-            'Time = `01:01:1` required format is HH:MM:SS',
+            'Time = `01:01:1` need two digits for seconds',
             "ensure required format"
         );
 
         t.end();
     });
+    
+    test('G-type column constraints', function (t) {
+        t.equal(check.Gtype(''), undefined, "permit empty strings");
+        t.equal(check.Gtype('C'), undefined);
+        t.equal(check.Gtype('DP'), undefined);
+        t.equal(check.Gtype('C/DP'), undefined);
+        t.equal(check.Gtype('C;DP'), undefined);
+        t.equal(check.Gtype('C/DP;G/S/DSDP'), undefined);
+        t.equal(check.Gtype('R.m.pp'), undefined);
+        t.equal(
+            check.Gtype('Z'),
+            'Gtype = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('A'),
+            'Gtype = `A` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('C/GG'),
+            'Gtype = `C/GG` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Gtype('C/DP '),
+            'Gtype = `C/DP ` entry cannot contain space',
+            "check for spaces"
+        );
+        t.equal(
+            check.Gtype(';C/DP'),
+            'Gtype = `;C/DP` entry cannot begin with ;',
+            "check beginning for ;"
+        );
+        t.equal(
+            check.Gtype('/C/DP'),
+            'Gtype = `/C/DP` entry cannot begin with /',
+            "check beginning for /"
+        );
+        t.equal(
+            check.Gtype('.C/DP'),
+            'Gtype = `.C/DP` entry cannot begin with .',
+            "check beginning for ."
+        );
+        t.equal(
+            check.Gtype('C/DP.'),
+            'Gtype = `C/DP.` entry cannot end with .',
+            "check end for ."
+        );
+        t.equal(
+            check.Gtype('C/DP/'),
+            'Gtype = `C/DP/` entry cannot end with /',
+            "check end for /"
+        );
+        t.equal(
+            check.Gtype('C/43/DP'),
+            'Gtype = `C/43/DP` entry cannot contain numeric characters',
+            "check for numbers"
+        );
+        t.equal(
+            check.Gtype('C//DP'),
+            'Gtype = `C//DP` entry cannot contain //',
+            "check for //"
+        );
+        t.equal(
+            check.Gtype('C;;DP'),
+            'Gtype = `C;;DP` entry cannot contain ;;',
+            "check for ;;"
+        );
+        t.equal(
+            check.Gtype('R.m..pp'),
+            'Gtype = `R.m..pp` entry cannot contain ..',
+            "check for .."
+        );
+        t.end();
+    });
 
+    test('GS_Rel column constraints', function (t) {
+        t.equal(check.GSRel(''), undefined, "permit empty strings");
+        t.equal(check.GSRel('ADD'), undefined);
+        t.equal(check.GSRel('ADD.err'), undefined);
+        t.equal(check.GSRel('ADD.err.s'), undefined);
+        t.equal(check.GSRel('DA/MS'), undefined);
+        t.equal(check.GSRel('X;E'), undefined);
+        t.equal(check.GSRel('ADD/ADD.met;E.b;RF.a/MS'), undefined);
+        t.equal(
+            check.GSRel('Z'),
+            'GSRel = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('ADDD'),
+            'GSRel = `ADDD` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('C/XX'),
+            'GSRel = `C/XX` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.GSRel('X;E '),
+            'GSRel = `X;E ` entry cannot contain space',
+            "check for spaces"
+        );
+        t.equal(
+            check.GSRel(';X;E'),
+            'GSRel = `;X;E` entry cannot begin with ;',
+            "check beginning for ;"
+        );
+        t.equal(
+            check.GSRel('/X;E'),
+            'GSRel = `/X;E` entry cannot begin with /',
+            "check beginning for /"
+        );
+        t.equal(
+            check.GSRel('.X;E'),
+            'GSRel = `.X;E` entry cannot begin with .',
+            "check beginning for ."
+        );
+        t.equal(
+            check.GSRel('X;E.'),
+            'GSRel = `X;E.` entry cannot end with .',
+            "check end for ."
+        );
+        t.equal(
+            check.GSRel('X;E/'),
+            'GSRel = `X;E/` entry cannot end with /',
+            "check end for /"
+        );
+        t.equal(
+            check.GSRel('X/43/E'),
+            'GSRel = `X/43/E` entry cannot contain numeric characters',
+            "check for numbers"
+        );
+        t.equal(
+            check.GSRel('X//E'),
+            'GSRel = `X//E` entry cannot contain //',
+            "check for //"
+        );
+        t.equal(
+            check.GSRel('X;;E'),
+            'GSRel = `X;;E` entry cannot contain ;;',
+            "check for ;;"
+        );
+        t.equal(
+            check.GSRel('ADD..err'),
+            'GSRel = `ADD..err` entry cannot contain ..',
+            "check for .."
+        );
+        t.end();
+    });
+
+    test('Key column constraints', function (t) {
+        t.equal(check.Key(''), undefined, "permit empty strings");
+        t.equal(check.Key('xcx'), undefined);
+        t.equal(check.Key('M12F2'), undefined);
+        t.equal(check.Key('123456789'), undefined);
+        t.equal(
+            check.Key('1 '),
+            'Key = `1 ` entry cannot contain space',
+            "check for space"
+        );
+        t.equal(
+            check.Key('0'),
+            'Key = `0` entry cannot contain 0',
+            "check for 0"
+        );
+        t.equal(
+            check.Key('Z'),
+            'Key = `Z` is an invalid entry',
+            "check for valid characters"
+        );
+        t.equal(
+            check.Key('P'),
+            'Key = `P` is an invalid entry',
+            "check for valid characters"
+        );
+        t.end();
+    });
+
+    test('Utts column constraints', function (t) {
+        t.equal(check.Utts(''), undefined, "permit empty strings");
+        t.equal(check.Utts('a'), undefined);
+        t.equal(check.Utts('hello'), undefined);
+        t.equal(check.Utts('---'), undefined);
+        t.equal(check.Utts('###'), undefined);
+        t.equal(check.Utts('hello world'), undefined);
+        t.equal(check.Utts('pollo@f'), undefined);
+        t.equal(check.Utts('pollo@f fried'), undefined);
+        t.equal(check.Utts('pollo@f frito@f'), undefined);
+        t.equal(check.Utts('@lpollo@l'), undefined);
+        t.equal(check.Utts('@lpollo@l fried'), undefined);
+        t.equal(check.Utts('@lpollo@l @lfried@l'), undefined);
+        t.equal(
+            check.Utts('@fpollo'),
+            'Utts = `@fpollo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('fried @fpollo'),
+            'Utts = `fried @fpollo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('po@fllo'),
+            'Utts = `po@fllo` @f must be at end of word',
+            "check location of @f"
+        );
+        t.equal(
+            check.Utts('pollo@l'),
+            'Utts = `pollo@l` @l must be at beginning of word',
+            "check beginning for @l"
+        );
+        t.equal(
+            check.Utts('pollo@l fried'),
+            'Utts = `pollo@l fried` @l must be at beginning of word',
+            "check beginning for @l"
+        );
+        t.equal(
+            check.Utts('@lpollo'),
+            'Utts = `@lpollo` @l must be at end of word',
+            "check end for @l"
+        );
+        t.equal(
+            check.Utts('pol@lo'),
+            'Utts = `pol@lo` @l must be at end of word',
+            "check beginning and end for @l"
+        );
+        t.equal(
+            check.Utts('p@ollo'),
+            'Utts = `p@ollo` entry can only have @f or @l',
+            "check beginning and end for @l"
+        );
+        t.equal(
+            check.Utts(' hello'),
+            'Utts = ` hello` entry cannot begin with space',
+            "check beginning for space"
+        );
+        t.equal(
+            check.Utts('hello '),
+            'Utts = `hello ` entry cannot end with space',
+            "check end for space"
+        );
+        t.equal(
+            check.Utts('heLlo'),
+            'Utts = `heLlo` entry cannot contain capital letter',
+            "check for capital letter"
+        );
+        t.equal(
+            check.Utts('-'),
+            'Utts = `-` entry cannot contain - or --',
+            "check for - and --"
+        );
+        t.equal(
+            check.Utts('#'),
+            'Utts = `#` entry cannot contain # or ##',
+            "check for # and ##"
+        );
+        t.equal(
+            check.Utts('--'),
+            'Utts = `--` entry cannot contain - or --',
+            "check for - and --"
+        );
+        t.equal(
+            check.Utts('##'),
+            'Utts = `##` entry cannot contain # or ##',
+            "check for # and ##"
+        );
+        t.equal(
+            check.Utts('----'),
+            'Utts = `----` entry can only contain ---',
+            "check for ----"
+        );
+        t.equal(
+            check.Utts('####'),
+            'Utts = `####` entry can only contain ###',
+            "check for ####"
+        );
+        t.end();
+    });
+    
     t.end();
 });
 
 test('validate', function (t) {
 
     var records = [
-            {"_ID": "22", "ROW": "1", "LRB": "L", "XYZ": "x", "Time": "00:00:00"},
-            {"_ID": "22", "ROW": "2", "LRB": "L+L", "XYZ": "y", "Time": "00:00:00"},
-            {"_ID": "22", "ROW": "3", "LRB": "L+ ", "XYZ": "z", "Time": " 30:00:00"},
-            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "XYZ": "q", "Time": "23:59:59"},
-            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "XYZ": "b", "Time": "00:0:00"}
+            {"_ID": "22", "ROW": "1", "LRB": "L", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "2", "LRB": "L+L", "Time": "00:00:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "3", "LRB": "L+", "Time": " 30:00:00", "Gtype": "C", "GSRel": "ADD ", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "4", "LRB": "L+R+B", "Time": "23:59:59", "Gtype": "C", "GSRel": "ADDD", "Key": "1", "Utts": "---"},
+            {"_ID": "22", "ROW": "5", "LRB": "L+R+X", "Time": "00:0:00", "Gtype": "C", "GSRel": "ADD", "Key": "1", "Utts": "---"}
         ],
         Validator = require('valid-records'),
         valid = new Validator(check),
         results = valid.validate(records);
 
     t.plan(2);
-    t.equal(results.report.invalid, 2);
-    t.equal(Object.keys(results.report.errors).length, 2, "2 lines have errors");
+    t.equal(results.report.invalid, 6);
+    t.equal(Object.keys(results.report.errors).length, 3, "3 lines have errors");
 });
