@@ -155,6 +155,7 @@ test('schema', function (t) {
         t.equal(
             check.time('0'),
             'time = `0` required format is HH:MM:SS',
+<<<<<<< HEAD
             "ensure required format"
         );
         t.equal(
@@ -177,6 +178,30 @@ test('schema', function (t) {
             'time = `01:01:1` need two digits for seconds',
             "ensure required format"
         );
+=======
+            "ensure required format"
+        );
+        t.equal(
+            check.time('00:00'),
+            'time = `00:00` required format is HH:MM:SS',
+            "ensure required format"
+        );
+        t.equal(
+            check.time('1:01:01'),
+            'time = `1:01:01` need two digits for hours',
+            "ensure required format"
+        );
+        t.equal(
+            check.time('01:1:01'),
+            'time = `01:1:01` need two digits for minutes',
+            "ensure required format"
+        );
+        t.equal(
+            check.time('01:01:1'),
+            'time = `01:01:1` need two digits for seconds',
+            "ensure required format"
+        );
+>>>>>>> upstream/master
 
         t.end();
     });
@@ -368,8 +393,11 @@ test('schema', function (t) {
         t.equal(check.Utts('---'), undefined);
         t.equal(check.Utts('###'), undefined);
         t.equal(check.Utts('hello world'), undefined);
+<<<<<<< HEAD
         t.equal(check.Utts('Hello World'), undefined);
         t.equal(check.Utts('hello World'), undefined);
+=======
+>>>>>>> upstream/master
         t.equal(check.Utts('pollo@f'), undefined);
         t.equal(check.Utts('pollo@f fried'), undefined);
         t.equal(check.Utts('pollo@f frito@f'), undefined);
@@ -428,12 +456,16 @@ test('schema', function (t) {
         );
         t.equal(
             check.Utts('heLlo'),
+<<<<<<< HEAD
             'Utts = `heLlo` entry cannot contain capital letter unless proper noun',
             "check for capital letter"
         );
         t.equal(
             check.Utts('heLlo World'),
             'Utts = `heLlo World` entry cannot contain capital letter unless proper noun',
+=======
+            'Utts = `heLlo` entry cannot contain capital letter',
+>>>>>>> upstream/master
             "check for capital letter"
         );
         t.equal(

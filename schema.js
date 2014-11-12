@@ -194,7 +194,6 @@ var key = function (v) {
     var column = 'Key';
     if (v) {
         if (!/^([1-9adefFilmMoprtvx]|xc)([1-9adefFilmMoprtvx]|xc)*$/.test(v)) {
-
             if (/\s/.test(v)) {
                 return invalidReply(column, v, 'entry cannot contain space');
             }
