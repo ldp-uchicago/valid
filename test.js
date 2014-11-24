@@ -4,7 +4,6 @@ var test = require('tape'),
     check = require('./schema'),
     patterns = require('./patterns');
 
-
 test('patterns', function (t) {
 
     test('gtype column patterns', function (t) {
@@ -177,7 +176,6 @@ test('schema', function (t) {
             'time = `01:01:1` need two digits for seconds',
             "ensure required format"
         );
-
         t.end();
     });
 
@@ -368,6 +366,8 @@ test('schema', function (t) {
         t.equal(check.Utts('---'), undefined);
         t.equal(check.Utts('###'), undefined);
         t.equal(check.Utts('hello world'), undefined);
+        t.equal(check.Utts('Hello World'), undefined);
+        t.equal(check.Utts('hello World'), undefined);
         t.equal(check.Utts('pollo@f'), undefined);
         t.equal(check.Utts('pollo@f fried'), undefined);
         t.equal(check.Utts('pollo@f frito@f'), undefined);
@@ -426,7 +426,12 @@ test('schema', function (t) {
         );
         t.equal(
             check.Utts('heLlo'),
-            'Utts = `heLlo` entry cannot contain capital letter',
+            'Utts = `heLlo` entry cannot contain capital letter unless proper noun',
+            "check for capital letter"
+        );
+        t.equal(
+            check.Utts('heLlo World'),
+            'Utts = `heLlo World` entry cannot contain capital letter unless proper noun',
             "check for capital letter"
         );
         t.equal(
