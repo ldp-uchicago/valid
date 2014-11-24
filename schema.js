@@ -193,8 +193,7 @@ var key = function (v) {
 
     var column = 'Key';
     if (v) {
-        if (!/^([1-9]|a|d|e|F|f|i|l|M|m|o|p|r|t|v|x|xc)([1-9]|a|d|e|F|f|i|l|M|m|o|p|r|t|v|x|xc)*$/.test(v)) {
-
+        if (!/^([1-9adefFilmMoprtvx]|xc)([1-9adefFilmMoprtvx]|xc)*$/.test(v)) {
             if (/\s/.test(v)) {
                 return invalidReply(column, v, 'entry cannot contain space');
             }
@@ -282,7 +281,11 @@ var utts = function (v) {
 
         } else {
             if (/[A-Z]/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain capital letter');
+                if (/[a-z][A-Z][a-z\s]/.test(v)) {
+                    return invalidReply(column, v, 'entry cannot contain capital letter unless proper noun');
+                } else {
+                    return;
+                }
             }
             if (/^\s/.test(v)) {
                 return invalidReply(column, v, 'entry cannot begin with space');
