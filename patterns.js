@@ -24,8 +24,8 @@ function Gtype() {
 
     // final regex based on the complex pattern
     this.regex = new RegExp(this.complex);
-
 }
+
 
 // test whether value matches final gtype regex
 //
@@ -60,6 +60,7 @@ function Gsrel() {
     // final regex based on the complex pattern
     this.regex = new RegExp(this.complex);
 }
+
 
 // test whether value matches final gsrel regex
 //

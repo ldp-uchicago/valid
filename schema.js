@@ -137,171 +137,108 @@ var gtype = function (v) {
 var gsrel = function (v) {
 
     var column = 'gsrel';
-    if (v) {
-        if (!patterns.gsrel.test(v)) {
 
-            if (/\s/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain space');
-            }
+    if (v && !patterns.gsrel.test(v)) {
 
-            if (/^;/.test(v)) {
-                return invalidReply(column, v, 'entry cannot begin with ;');
-            }
-
-            if (/^\//.test(v)) {
-                return invalidReply(column, v, 'entry cannot begin with /');
-            }
-
-            if (/^\./.test(v)) {
-                return invalidReply(column, v, 'entry cannot begin with .');
-            }
-
-            if (/;$/.test(v)) {
-                return invalidReply(column, v, 'entry cannot end with ;');
-            }
-
-            if (/\/$/.test(v)) {
-                return invalidReply(column, v, 'entry cannot end with /');
-            }
-
-            if (/\.$/.test(v)) {
-                return invalidReply(column, v, 'entry cannot end with .');
-            }
-
-            if (/[0-9]/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain numbers');
-            }
-
-            if (/(\/\/)/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain //');
-            }
-
-            if (/;;/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain ;;');
-            }
-
-            if (/(\.\.)/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain ..');
-            }
-
-            return invalidReply(column, v, 'is an invalid entry');
+        if (/\s/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain space');
         }
+
+        if (/^;/.test(v)) {
+            return invalidReply(column, v, 'entry cannot begin with ;');
+        }
+
+        if (/^\//.test(v)) {
+            return invalidReply(column, v, 'entry cannot begin with /');
+        }
+
+        if (/^\./.test(v)) {
+            return invalidReply(column, v, 'entry cannot begin with .');
+        }
+
+        if (/;$/.test(v)) {
+            return invalidReply(column, v, 'entry cannot end with ;');
+        }
+
+        if (/\/$/.test(v)) {
+            return invalidReply(column, v, 'entry cannot end with /');
+        }
+
+        if (/\.$/.test(v)) {
+            return invalidReply(column, v, 'entry cannot end with .');
+        }
+
+        if (/[0-9]/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain numbers');
+        }
+
+        if (/(\/\/)/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain //');
+        }
+
+        if (/;;/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain ;;');
+        }
+
+        if (/(\.\.)/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain ..');
+        }
+
+        return invalidReply(column, v, 'is an invalid entry');
     }
 };
 
 var key = function (v) {
 
-    var column = 'Key';
-    if (v) {
-        if (!/^([1-9adefFilmMoprtvx]|xc)([1-9adefFilmMoprtvx]|xc)*$/.test(v)) {
-            if (/\s/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain space');
-            }
+    var column = 'key';
 
-            if (/0/.test(v)) {
-                return invalidReply(column, v, 'entry cannot contain 0');
-            }
+    if (v && !/^([1-9adefFilmMoprtvx]|xc)([1-9adefFilmMoprtvx]|xc)*$/.test(v)) {
 
-            return invalidReply(column, v, 'is an invalid entry');
+        if (/\s/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain space');
         }
+
+        if (/0/.test(v)) {
+            return invalidReply(column, v, 'entry cannot contain 0');
+        }
+
+        return invalidReply(column, v, 'is an invalid entry');
     }
 };
 
 var utts = function (v) {
 
-    var column = 'Utts';
+    var column = 'utts';
+
     if (v) {
-        if (/^[\-#@a-z\s][\-#@a-z\s]*$/.test(v)) {
 
-            if (/^\s/.test(v)) {
-                return invalidReply(column, v, 'entry cannot begin with space');
-            }
+        if (/^\s/.test(v) || /\s$/.test(v)) {
+            return invalidReply(column, v, 'entry cannot begin or end with space');
+        }
 
-            if (/\s$/.test(v)) {
-                return invalidReply(column, v, 'entry cannot end with space');
-            }
+        if (/-/.test(v) && (!/^---$/.test(v) || !/\s---\s/)) {
+            return invalidReply(column, v, 'entry can only contain `---`');
+        }
 
-            if (/\-/.test(v)) {
-                if (/---/.test(v)) {
-                    if (/----/.test(v)) {
-                        return invalidReply(column, v, 'entry can only contain ---');
-                    }
+        if (/#/.test(v) && (!/^###$/.test(v) || !/\s###\s/)) {
+            return invalidReply(column, v, 'entry can only contain `###`');
+        }
 
-                } else {
-                    return invalidReply(column, v, 'entry cannot contain - or --');
-                }
-            }
+        if (/@/.test(v) && !/\w@[fl]\b/) {
+            return invalidReply(column, v, "invalid postfix tag (use `@f` or `@l`)");
+        }
 
-            if (/[#]/.test(v)) {
-                if (/###/.test(v)) {
-                    if (/####/.test(v)) {
-                        return invalidReply(column, v, 'entry can only contain ###');
-                    }
-
-                } else {
-                    return invalidReply(column, v, 'entry cannot contain # or ##');
-                }
-            }
-
-            if (/@/.test(v)) {
-                if (!/@f/.test(v) && !/@l/.test(v)) {
-                    return invalidReply(column, v, "entry can only have @f or @l");
-                }
-
-                if (/@f/.test(v)) {
-                    if (/\s/.test(v)) {
-                        if (!/@f\s/.test(v) && !/@f$/.test(v)) {
-                            return invalidReply(column, v, '@f must be at end of word');
-                        }
-                    } else {
-                        if (!/@f$/.test(v)) {
-                            return invalidReply(column, v, '@f must be at end of word');
-                        }
-                    }
-                }
-
-                if (/@l/.test(v)) {
-                    if (/\s/.test(v)) {
-                        if (!/@l\s/.test(v) && !/@l$/.test(v)) {
-                            return invalidReply(column, v, '@l must be at end of word');
-                        }
-                        if (!/\s@l/.test(v) && !/^@l/.test(v)) {
-                            return invalidReply(column, v, '@l must be at beginning of word');
-                        }
-                    } else {
-                        if (!/@l$/.test(v)) {
-                            return invalidReply(column, v, '@l must be at end of word');
-                        }
-                        if (!/^@l/.test(v)) {
-                            return invalidReply(column, v, '@l must be at beginning of word');
-                        }
-                    }
-                }
-            }
-
-        } else {
-            if (/[A-Z]/.test(v)) {
-                if (/[a-z][A-Z][a-z\s]/.test(v)) {
-                    return invalidReply(column, v, 'entry cannot contain capital letter unless proper noun');
-                } else {
-                    return;
-                }
-            }
-            if (/^\s/.test(v)) {
-                return invalidReply(column, v, 'entry cannot begin with space');
-            }
-            return invalidReply(column, v, 'is an invalid entry');
+        if (/[a-z][A-Z][a-z\s]/.test(v)) {
+            return invalidReply(column, v, 'no embedded cap letters');
         }
     }
 };
 
 module.exports = {
-
     lrb: lrb,
     time: time,
     gtype: gtype,
     gsrel: gsrel,
-    Key: key,
-    Utts: utts
-
+    key: key,
+    utts: utts
 };
